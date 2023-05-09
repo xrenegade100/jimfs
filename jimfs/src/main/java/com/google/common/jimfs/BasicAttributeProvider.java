@@ -45,16 +45,16 @@ final class BasicAttributeProvider extends AttributeProvider {
   public static final String ATTR_LAST_MODIFIED_TIME_KEY_NAME = "lastModifiedTime";
 
   private static final ImmutableSet<String> ATTRIBUTES =
-          ImmutableSet.of(
-                  ATTR_SIZE_KEY_NAME,
-                  ATTR_FILE_KEY_KEY_NAME,
-                  ATTR_IS_DIRECTORY_KEY_NAME,
-                  ATTR_IS_REGULAR_FILE_KEY_NAME,
-                  ATTR_IS_SYMBOLIC_LINK_KEY_NAME,
-                  ATTR_IS_OTHER_KEY_NAME,
-                  ATTR_CREATION_TIME_KEY_NAME,
-                  ATTR_LAST_ACCESS_TIME_KEY_NAME,
-                  ATTR_LAST_MODIFIED_TIME_KEY_NAME);
+      ImmutableSet.of(
+              ATTR_SIZE_KEY_NAME,
+              ATTR_FILE_KEY_KEY_NAME,
+              ATTR_IS_DIRECTORY_KEY_NAME,
+              ATTR_IS_REGULAR_FILE_KEY_NAME,
+              ATTR_IS_SYMBOLIC_LINK_KEY_NAME,
+              ATTR_IS_OTHER_KEY_NAME,
+              ATTR_CREATION_TIME_KEY_NAME,
+              ATTR_LAST_ACCESS_TIME_KEY_NAME,
+              ATTR_LAST_MODIFIED_TIME_KEY_NAME);
 
   @Override
   public String name() {
@@ -126,7 +126,7 @@ final class BasicAttributeProvider extends AttributeProvider {
 
   @Override
   public BasicFileAttributeView view(
-          FileLookup lookup, ImmutableMap<String, FileAttributeView> inheritedViews) {
+      FileLookup lookup, ImmutableMap<String, FileAttributeView> inheritedViews) {
     return new View(lookup);
   }
 
@@ -159,10 +159,10 @@ final class BasicAttributeProvider extends AttributeProvider {
 
     @Override
     public void setTimes(
-            @NullableDecl FileTime lastModifiedTime,
-            @NullableDecl FileTime lastAccessTime,
-            @NullableDecl FileTime createTime)
-            throws IOException {
+        @NullableDecl FileTime lastModifiedTime,
+        @NullableDecl FileTime lastAccessTime,
+        @NullableDecl FileTime createTime)
+        throws IOException {
       File file = lookupFile();
 
       if (lastModifiedTime != null) {
