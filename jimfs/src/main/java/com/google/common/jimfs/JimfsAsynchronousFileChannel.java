@@ -46,6 +46,8 @@ final class JimfsAsynchronousFileChannel extends AsynchronousFileChannel {
   private final JimfsFileChannel channel;
   private final ListeningExecutorService executor;
 
+  public static final String POSITION_KEY_NAME = "position";
+
   public JimfsAsynchronousFileChannel(JimfsFileChannel channel, ExecutorService executor) {
     this.channel = checkNotNull(channel);
     this.executor = MoreExecutors.listeningDecorator(executor);
@@ -57,9 +59,9 @@ final class JimfsAsynchronousFileChannel extends AsynchronousFileChannel {
   }
 
   private <R, A> void addCallback(
-      ListenableFuture<R> future,
-      CompletionHandler<R, ? super A> handler,
-      @NullableDecl A attachment) {
+          ListenableFuture<R> future,
+          CompletionHandler<R, ? super A> handler,
+          @NullableDecl A attachment) {
     future.addListener(new CompletionHandlerCallback<>(future, handler, attachment), executor);
   }
 
@@ -77,19 +79,19 @@ final class JimfsAsynchronousFileChannel extends AsynchronousFileChannel {
 
   @Override
   public <A> void lock(
-      long position,
-      long size,
-      boolean shared,
-      @NullableDecl A attachment,
-      CompletionHandler<FileLock, ? super A> handler) {
+          long position,
+          long size,
+          boolean shared,
+          @NullableDecl A attachment,
+          CompletionHandler<FileLock, ? super A> handler) {
     checkNotNull(handler);
     addCallback(lock(position, size, shared), handler, attachment);
   }
 
   @Override
   public ListenableFuture<FileLock> lock(
-      final long position, final long size, final boolean shared) {
-    Util.checkNotNegative(position, "position");
+          final long position, final long size, final boolean shared) {
+    Util.checkNotNegative(position, POSITION_KEY_NAME);
     Util.checkNotNegative(size, "size");
     if (!isOpen()) {
       return closedChannelFuture();
@@ -100,17 +102,17 @@ final class JimfsAsynchronousFileChannel extends AsynchronousFileChannel {
       channel.checkWritable();
     }
     return executor.submit(
-        new Callable<FileLock>() {
-          @Override
-          public FileLock call() throws IOException {
-            return tryLock(position, size, shared);
-          }
-        });
+            new Callable<FileLock>() {
+              @Override
+              public FileLock call() throws IOException {
+                return tryLock(position, size, shared);
+              }
+            });
   }
 
   @Override
   public FileLock tryLock(long position, long size, boolean shared) throws IOException {
-    Util.checkNotNegative(position, "position");
+    Util.checkNotNegative(position, POSITION_KEY_NAME);
     Util.checkNotNegative(size, "size");
     channel.checkOpen();
     if (shared) {
@@ -123,53 +125,53 @@ final class JimfsAsynchronousFileChannel extends AsynchronousFileChannel {
 
   @Override
   public <A> void read(
-      ByteBuffer dst,
-      long position,
-      @NullableDecl A attachment,
-      CompletionHandler<Integer, ? super A> handler) {
+          ByteBuffer dst,
+          long position,
+          @NullableDecl A attachment,
+          CompletionHandler<Integer, ? super A> handler) {
     addCallback(read(dst, position), handler, attachment);
   }
 
   @Override
   public ListenableFuture<Integer> read(final ByteBuffer dst, final long position) {
     checkArgument(!dst.isReadOnly(), "dst may not be read-only");
-    Util.checkNotNegative(position, "position");
+    Util.checkNotNegative(position, POSITION_KEY_NAME);
     if (!isOpen()) {
       return closedChannelFuture();
     }
     channel.checkReadable();
     return executor.submit(
-        new Callable<Integer>() {
-          @Override
-          public Integer call() throws IOException {
-            return channel.read(dst, position);
-          }
-        });
+            new Callable<Integer>() {
+              @Override
+              public Integer call() throws IOException {
+                return channel.read(dst, position);
+              }
+            });
   }
 
   @Override
   public <A> void write(
-      ByteBuffer src,
-      long position,
-      @NullableDecl A attachment,
-      CompletionHandler<Integer, ? super A> handler) {
+          ByteBuffer src,
+          long position,
+          @NullableDecl A attachment,
+          CompletionHandler<Integer, ? super A> handler) {
     addCallback(write(src, position), handler, attachment);
   }
 
   @Override
   public ListenableFuture<Integer> write(final ByteBuffer src, final long position) {
-    Util.checkNotNegative(position, "position");
+    Util.checkNotNegative(position, POSITION_KEY_NAME);
     if (!isOpen()) {
       return closedChannelFuture();
     }
     channel.checkWritable();
     return executor.submit(
-        new Callable<Integer>() {
-          @Override
-          public Integer call() throws IOException {
-            return channel.write(src, position);
-          }
-        });
+            new Callable<Integer>() {
+              @Override
+              public Integer call() throws IOException {
+                return channel.write(src, position);
+              }
+            });
   }
 
   @Override
@@ -197,9 +199,9 @@ final class JimfsAsynchronousFileChannel extends AsynchronousFileChannel {
     @NullableDecl private final A attachment;
 
     private CompletionHandlerCallback(
-        ListenableFuture<R> future,
-        CompletionHandler<R, ? super A> completionHandler,
-        @NullableDecl A attachment) {
+            ListenableFuture<R> future,
+            CompletionHandler<R, ? super A> completionHandler,
+            @NullableDecl A attachment) {
       this.future = checkNotNull(future);
       this.completionHandler = checkNotNull(completionHandler);
       this.attachment = attachment;

@@ -34,17 +34,27 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
  */
 final class BasicAttributeProvider extends AttributeProvider {
 
+  public static final String ATTR_SIZE_KEY_NAME = "size";
+  public static final String ATTR_FILE_KEY_KEY_NAME = "fileKey";
+  public static final String ATTR_IS_DIRECTORY_KEY_NAME = "isDirectory";
+  public static final String ATTR_IS_REGULAR_FILE_KEY_NAME = "isRegularFile";
+  public static final String ATTR_IS_SYMBOLIC_LINK_KEY_NAME = "isSymbolicLink";
+  public static final String ATTR_IS_OTHER_KEY_NAME = "isOther";
+  public static final String ATTR_CREATION_TIME_KEY_NAME = "creationTime";
+  public static final String ATTR_LAST_ACCESS_TIME_KEY_NAME = "lastAccessTime";
+  public static final String ATTR_LAST_MODIFIED_TIME_KEY_NAME = "lastModifiedTime";
+
   private static final ImmutableSet<String> ATTRIBUTES =
-      ImmutableSet.of(
-          "size",
-          "fileKey",
-          "isDirectory",
-          "isRegularFile",
-          "isSymbolicLink",
-          "isOther",
-          "creationTime",
-          "lastAccessTime",
-          "lastModifiedTime");
+          ImmutableSet.of(
+                  ATTR_SIZE_KEY_NAME,
+                  ATTR_FILE_KEY_KEY_NAME,
+                  ATTR_IS_DIRECTORY_KEY_NAME,
+                  ATTR_IS_REGULAR_FILE_KEY_NAME,
+                  ATTR_IS_SYMBOLIC_LINK_KEY_NAME,
+                  ATTR_IS_OTHER_KEY_NAME,
+                  ATTR_CREATION_TIME_KEY_NAME,
+                  ATTR_LAST_ACCESS_TIME_KEY_NAME,
+                  ATTR_LAST_MODIFIED_TIME_KEY_NAME);
 
   @Override
   public String name() {
@@ -60,23 +70,23 @@ final class BasicAttributeProvider extends AttributeProvider {
   @Override
   public Object get(File file, String attribute) {
     switch (attribute) {
-      case "size":
+      case ATTR_SIZE_KEY_NAME:
         return file.size();
-      case "fileKey":
+      case ATTR_FILE_KEY_KEY_NAME:
         return file.id();
-      case "isDirectory":
+      case ATTR_IS_DIRECTORY_KEY_NAME:
         return file.isDirectory();
-      case "isRegularFile":
+      case ATTR_IS_REGULAR_FILE_KEY_NAME:
         return file.isRegularFile();
-      case "isSymbolicLink":
+      case ATTR_IS_SYMBOLIC_LINK_KEY_NAME:
         return file.isSymbolicLink();
-      case "isOther":
+      case ATTR_IS_OTHER_KEY_NAME:
         return !file.isDirectory() && !file.isRegularFile() && !file.isSymbolicLink();
-      case "creationTime":
+      case ATTR_CREATION_TIME_KEY_NAME:
         return file.getCreationTime();
-      case "lastAccessTime":
+      case ATTR_LAST_ACCESS_TIME_KEY_NAME:
         return file.getLastAccessTime();
-      case "lastModifiedTime":
+      case ATTR_LAST_MODIFIED_TIME_KEY_NAME:
         return file.getLastModifiedTime();
       default:
         return null;
@@ -86,24 +96,24 @@ final class BasicAttributeProvider extends AttributeProvider {
   @Override
   public void set(File file, String view, String attribute, Object value, boolean create) {
     switch (attribute) {
-      case "creationTime":
+      case ATTR_CREATION_TIME_KEY_NAME:
         checkNotCreate(view, attribute, create);
         file.setCreationTime(checkType(view, attribute, value, FileTime.class));
         break;
-      case "lastAccessTime":
+      case ATTR_LAST_ACCESS_TIME_KEY_NAME:
         checkNotCreate(view, attribute, create);
         file.setLastAccessTime(checkType(view, attribute, value, FileTime.class));
         break;
-      case "lastModifiedTime":
+      case ATTR_LAST_MODIFIED_TIME_KEY_NAME:
         checkNotCreate(view, attribute, create);
         file.setLastModifiedTime(checkType(view, attribute, value, FileTime.class));
         break;
-      case "size":
-      case "fileKey":
-      case "isDirectory":
-      case "isRegularFile":
-      case "isSymbolicLink":
-      case "isOther":
+      case ATTR_SIZE_KEY_NAME:
+      case ATTR_FILE_KEY_KEY_NAME:
+      case ATTR_IS_DIRECTORY_KEY_NAME:
+      case ATTR_IS_REGULAR_FILE_KEY_NAME:
+      case ATTR_IS_SYMBOLIC_LINK_KEY_NAME:
+      case ATTR_IS_OTHER_KEY_NAME:
         throw unsettable(view, attribute, create);
       default:
     }
@@ -116,7 +126,7 @@ final class BasicAttributeProvider extends AttributeProvider {
 
   @Override
   public BasicFileAttributeView view(
-      FileLookup lookup, ImmutableMap<String, FileAttributeView> inheritedViews) {
+          FileLookup lookup, ImmutableMap<String, FileAttributeView> inheritedViews) {
     return new View(lookup);
   }
 
@@ -149,10 +159,10 @@ final class BasicAttributeProvider extends AttributeProvider {
 
     @Override
     public void setTimes(
-        @NullableDecl FileTime lastModifiedTime,
-        @NullableDecl FileTime lastAccessTime,
-        @NullableDecl FileTime createTime)
-        throws IOException {
+            @NullableDecl FileTime lastModifiedTime,
+            @NullableDecl FileTime lastAccessTime,
+            @NullableDecl FileTime createTime)
+            throws IOException {
       File file = lookupFile();
 
       if (lastModifiedTime != null) {

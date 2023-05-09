@@ -37,8 +37,16 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
  */
 final class DosAttributeProvider extends AttributeProvider {
 
+  public static final String ATTR_READ_ONLY_DOS_PROVIDER = "readonly";
+
+  public static final String ATTR_HIDDEN_DOS_PROVIDER = "hidden";
+
+  public static final String ATTR_ARCHIVE_DOS_PROVIDER = "archive";
+
+  public static final String ATTR_SYSTEM_DOS_PROVIDER = "system";
+
   private static final ImmutableSet<String> ATTRIBUTES =
-      ImmutableSet.of("readonly", "hidden", "archive", "system");
+          ImmutableSet.of(ATTR_READ_ONLY_DOS_PROVIDER, ATTR_HIDDEN_DOS_PROVIDER, ATTR_ARCHIVE_DOS_PROVIDER, ATTR_SYSTEM_DOS_PROVIDER);
 
   private static final ImmutableSet<String> INHERITED_VIEWS = ImmutableSet.of("basic", "owner");
 
@@ -60,10 +68,10 @@ final class DosAttributeProvider extends AttributeProvider {
   @Override
   public ImmutableMap<String, ?> defaultValues(Map<String, ?> userProvidedDefaults) {
     return ImmutableMap.of(
-        "dos:readonly", getDefaultValue("dos:readonly", userProvidedDefaults),
-        "dos:hidden", getDefaultValue("dos:hidden", userProvidedDefaults),
-        "dos:archive", getDefaultValue("dos:archive", userProvidedDefaults),
-        "dos:system", getDefaultValue("dos:system", userProvidedDefaults));
+            "dos:readonly", getDefaultValue("dos:readonly", userProvidedDefaults),
+            "dos:hidden", getDefaultValue("dos:hidden", userProvidedDefaults),
+            "dos:archive", getDefaultValue("dos:archive", userProvidedDefaults),
+            "dos:system", getDefaultValue("dos:system", userProvidedDefaults));
   }
 
   private static Boolean getDefaultValue(String attribute, Map<String, ?> userProvidedDefaults) {
@@ -100,7 +108,7 @@ final class DosAttributeProvider extends AttributeProvider {
 
   @Override
   public DosFileAttributeView view(
-      FileLookup lookup, ImmutableMap<String, FileAttributeView> inheritedViews) {
+          FileLookup lookup, ImmutableMap<String, FileAttributeView> inheritedViews) {
     return new View(lookup, (BasicFileAttributeView) inheritedViews.get("basic"));
   }
 
@@ -136,28 +144,28 @@ final class DosAttributeProvider extends AttributeProvider {
 
     @Override
     public void setTimes(FileTime lastModifiedTime, FileTime lastAccessTime, FileTime createTime)
-        throws IOException {
+            throws IOException {
       basicView.setTimes(lastModifiedTime, lastAccessTime, createTime);
     }
 
     @Override
     public void setReadOnly(boolean value) throws IOException {
-      lookupFile().setAttribute("dos", "readonly", value);
+      lookupFile().setAttribute("dos", ATTR_READ_ONLY_DOS_PROVIDER, value);
     }
 
     @Override
     public void setHidden(boolean value) throws IOException {
-      lookupFile().setAttribute("dos", "hidden", value);
+      lookupFile().setAttribute("dos", ATTR_HIDDEN_DOS_PROVIDER, value);
     }
 
     @Override
     public void setSystem(boolean value) throws IOException {
-      lookupFile().setAttribute("dos", "system", value);
+      lookupFile().setAttribute("dos", ATTR_SYSTEM_DOS_PROVIDER, value);
     }
 
     @Override
     public void setArchive(boolean value) throws IOException {
-      lookupFile().setAttribute("dos", "archive", value);
+      lookupFile().setAttribute("dos", ATTR_ARCHIVE_DOS_PROVIDER, value);
     }
   }
 
@@ -171,10 +179,10 @@ final class DosAttributeProvider extends AttributeProvider {
 
     protected Attributes(File file) {
       super(file);
-      this.readOnly = (boolean) file.getAttribute("dos", "readonly");
-      this.hidden = (boolean) file.getAttribute("dos", "hidden");
-      this.archive = (boolean) file.getAttribute("dos", "archive");
-      this.system = (boolean) file.getAttribute("dos", "system");
+      this.readOnly = (boolean) file.getAttribute("dos", ATTR_READ_ONLY_DOS_PROVIDER);
+      this.hidden = (boolean) file.getAttribute("dos", ATTR_HIDDEN_DOS_PROVIDER);
+      this.archive = (boolean) file.getAttribute("dos", ATTR_ARCHIVE_DOS_PROVIDER);
+      this.system = (boolean) file.getAttribute("dos", ATTR_SYSTEM_DOS_PROVIDER);
     }
 
     @Override
