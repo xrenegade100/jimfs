@@ -68,10 +68,10 @@ final class DosAttributeProvider extends AttributeProvider {
   @Override
   public ImmutableMap<String, ?> defaultValues(Map<String, ?> userProvidedDefaults) {
     return ImmutableMap.of(
-            "dos:readonly", getDefaultValue("dos:readonly", userProvidedDefaults),
-            "dos:hidden", getDefaultValue("dos:hidden", userProvidedDefaults),
-            "dos:archive", getDefaultValue("dos:archive", userProvidedDefaults),
-            "dos:system", getDefaultValue("dos:system", userProvidedDefaults));
+        "dos:readonly", getDefaultValue("dos:readonly", userProvidedDefaults),
+        "dos:hidden", getDefaultValue("dos:hidden", userProvidedDefaults),
+        "dos:archive", getDefaultValue("dos:archive", userProvidedDefaults),
+        "dos:system", getDefaultValue("dos:system", userProvidedDefaults));
   }
 
   private static Boolean getDefaultValue(String attribute, Map<String, ?> userProvidedDefaults) {
@@ -108,7 +108,7 @@ final class DosAttributeProvider extends AttributeProvider {
 
   @Override
   public DosFileAttributeView view(
-          FileLookup lookup, ImmutableMap<String, FileAttributeView> inheritedViews) {
+      FileLookup lookup, ImmutableMap<String, FileAttributeView> inheritedViews) {
     return new View(lookup, (BasicFileAttributeView) inheritedViews.get("basic"));
   }
 
@@ -144,7 +144,7 @@ final class DosAttributeProvider extends AttributeProvider {
 
     @Override
     public void setTimes(FileTime lastModifiedTime, FileTime lastAccessTime, FileTime createTime)
-            throws IOException {
+        throws IOException {
       basicView.setTimes(lastModifiedTime, lastAccessTime, createTime);
     }
 

@@ -77,7 +77,7 @@ final class JimfsFileChannel extends FileChannel {
   private long position;
 
   public JimfsFileChannel(
-          RegularFile file, Set<OpenOption> options, FileSystemState fileSystemState) {
+      RegularFile file, Set<OpenOption> options, FileSystemState fileSystemState) {
     this.file = file;
     this.fileSystemState = fileSystemState;
     this.read = options.contains(READ);
