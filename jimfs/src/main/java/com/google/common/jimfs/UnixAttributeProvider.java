@@ -37,11 +37,15 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
  */
 final class UnixAttributeProvider extends AttributeProvider {
 
+  public static final String ATT_POSIX = "posix";
+
+  public static final String ATT_OWNER = "owner";
+
   private static final ImmutableSet<String> ATTRIBUTES =
       ImmutableSet.of("uid", "ino", "dev", "nlink", "rdev", "ctime", "mode", "gid");
 
   private static final ImmutableSet<String> INHERITED_VIEWS =
-      ImmutableSet.of("basic", "owner", "posix");
+      ImmutableSet.of("basic", ATT_OWNER, ATT_POSIX);
 
   private final AtomicInteger uidGenerator = new AtomicInteger();
   private final ConcurrentMap<Object, Integer> idCache = new ConcurrentHashMap<>();
@@ -100,14 +104,14 @@ final class UnixAttributeProvider extends AttributeProvider {
   public Object get(File file, String attribute) {
     switch (attribute) {
       case "uid":
-        UserPrincipal user = (UserPrincipal) file.getAttribute("owner", "owner");
+        UserPrincipal user = (UserPrincipal) file.getAttribute(ATT_OWNER, ATT_OWNER);
         return getUniqueId(user);
       case "gid":
-        GroupPrincipal group = (GroupPrincipal) file.getAttribute("posix", "group");
+        GroupPrincipal group = (GroupPrincipal) file.getAttribute(ATT_POSIX, "group");
         return getUniqueId(group);
       case "mode":
         Set<PosixFilePermission> permissions =
-            (Set<PosixFilePermission>) file.getAttribute("posix", "permissions");
+            (Set<PosixFilePermission>) file.getAttribute(ATT_POSIX, "permissions");
         return toMode(permissions);
       case "ctime":
         return file.getCreationTime();
