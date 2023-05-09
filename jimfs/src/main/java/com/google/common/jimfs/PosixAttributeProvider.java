@@ -45,17 +45,25 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
  */
 final class PosixAttributeProvider extends AttributeProvider {
 
-  private static final ImmutableSet<String> ATTRIBUTES = ImmutableSet.of("group", "permissions");
+  public static final String ATT_PERMISSIONS = "permissions";
 
-  private static final ImmutableSet<String> INHERITED_VIEWS = ImmutableSet.of("basic", "owner");
+  public static final String ATT_GROUP = "group";
 
-  private static final GroupPrincipal DEFAULT_GROUP = createGroupPrincipal("group");
+  public static final String ATT_OWNER = "owner";
+
+  public static final String ATT_POSIX = "posix";
+
+  private static final ImmutableSet<String> ATTRIBUTES = ImmutableSet.of(ATT_GROUP, ATT_PERMISSIONS);
+
+  private static final ImmutableSet<String> INHERITED_VIEWS = ImmutableSet.of("basic", ATT_OWNER);
+
+  private static final GroupPrincipal DEFAULT_GROUP = createGroupPrincipal(ATT_GROUP);
   private static final ImmutableSet<PosixFilePermission> DEFAULT_PERMISSIONS =
       Sets.immutableEnumSet(PosixFilePermissions.fromString("rw-r--r--"));
 
   @Override
   public String name() {
-    return "posix";
+    return ATT_POSIX;
   }
 
   @Override
@@ -118,10 +126,10 @@ final class PosixAttributeProvider extends AttributeProvider {
   @Override
   public Object get(File file, String attribute) {
     switch (attribute) {
-      case "group":
-        return file.getAttribute("posix", "group");
-      case "permissions":
-        return file.getAttribute("posix", "permissions");
+      case ATT_GROUP:
+        return file.getAttribute(ATT_POSIX, ATT_GROUP);
+      case ATT_PERMISSIONS:
+        return file.getAttribute(ATT_POSIX, ATT_PERMISSIONS);
       default:
         return null;
     }
@@ -130,18 +138,18 @@ final class PosixAttributeProvider extends AttributeProvider {
   @Override
   public void set(File file, String view, String attribute, Object value, boolean create) {
     switch (attribute) {
-      case "group":
+      case ATT_GROUP:
         checkNotCreate(view, attribute, create);
 
         GroupPrincipal group = checkType(view, attribute, value, GroupPrincipal.class);
         if (!(group instanceof UserLookupService.JimfsGroupPrincipal)) {
           group = createGroupPrincipal(group.getName());
         }
-        file.setAttribute("posix", "group", group);
+        file.setAttribute(ATT_POSIX, ATT_GROUP, group);
         break;
-      case "permissions":
+      case ATT_PERMISSIONS:
         file.setAttribute(
-            "posix", "permissions", toPermissions(checkType(view, attribute, value, Set.class)));
+            ATT_POSIX, ATT_PERMISSIONS, toPermissions(checkType(view, attribute, value, Set.class)));
         break;
       default:
     }
@@ -173,7 +181,7 @@ final class PosixAttributeProvider extends AttributeProvider {
     return new View(
         lookup,
         (BasicFileAttributeView) inheritedViews.get("basic"),
-        (FileOwnerAttributeView) inheritedViews.get("owner"));
+        (FileOwnerAttributeView) inheritedViews.get(ATT_OWNER));
   }
 
   @Override
@@ -201,7 +209,7 @@ final class PosixAttributeProvider extends AttributeProvider {
 
     @Override
     public String name() {
-      return "posix";
+      return ATT_POSIX;
     }
 
     @Override
@@ -217,12 +225,12 @@ final class PosixAttributeProvider extends AttributeProvider {
 
     @Override
     public void setPermissions(Set<PosixFilePermission> perms) throws IOException {
-      lookupFile().setAttribute("posix", "permissions", ImmutableSet.copyOf(perms));
+      lookupFile().setAttribute(ATT_POSIX, ATT_PERMISSIONS, ImmutableSet.copyOf(perms));
     }
 
     @Override
     public void setGroup(GroupPrincipal group) throws IOException {
-      lookupFile().setAttribute("posix", "group", checkNotNull(group));
+      lookupFile().setAttribute(ATT_POSIX, ATT_GROUP, checkNotNull(group));
     }
 
     @Override
@@ -246,10 +254,10 @@ final class PosixAttributeProvider extends AttributeProvider {
     @SuppressWarnings("unchecked")
     protected Attributes(File file) {
       super(file);
-      this.owner = (UserPrincipal) file.getAttribute("owner", "owner");
-      this.group = (GroupPrincipal) file.getAttribute("posix", "group");
+      this.owner = (UserPrincipal) file.getAttribute(ATT_OWNER, ATT_OWNER);
+      this.group = (GroupPrincipal) file.getAttribute(ATT_POSIX, ATT_GROUP);
       this.permissions =
-          (ImmutableSet<PosixFilePermission>) file.getAttribute("posix", "permissions");
+          (ImmutableSet<PosixFilePermission>) file.getAttribute(ATT_POSIX, ATT_PERMISSIONS);
     }
 
     @Override

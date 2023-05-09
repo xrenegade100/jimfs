@@ -35,13 +35,15 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
  */
 final class OwnerAttributeProvider extends AttributeProvider {
 
-  private static final ImmutableSet<String> ATTRIBUTES = ImmutableSet.of("owner");
+  public static final String ATT_OWNER = "owner";
+
+  private static final ImmutableSet<String> ATTRIBUTES = ImmutableSet.of(ATT_OWNER);
 
   private static final UserPrincipal DEFAULT_OWNER = createUserPrincipal("user");
 
   @Override
   public String name() {
-    return "owner";
+    return ATT_OWNER;
   }
 
   @Override
@@ -58,7 +60,7 @@ final class OwnerAttributeProvider extends AttributeProvider {
       if (userProvidedOwner instanceof String) {
         owner = createUserPrincipal((String) userProvidedOwner);
       } else {
-        throw invalidType("owner", "owner", userProvidedOwner, String.class, UserPrincipal.class);
+        throw invalidType(ATT_OWNER, ATT_OWNER, userProvidedOwner, String.class, UserPrincipal.class);
       }
     }
 
@@ -68,22 +70,22 @@ final class OwnerAttributeProvider extends AttributeProvider {
   @NullableDecl
   @Override
   public Object get(File file, String attribute) {
-    if (attribute.equals("owner")) {
-      return file.getAttribute("owner", "owner");
+    if (attribute.equals(ATT_OWNER)) {
+      return file.getAttribute(ATT_OWNER, ATT_OWNER);
     }
     return null;
   }
 
   @Override
   public void set(File file, String view, String attribute, Object value, boolean create) {
-    if (attribute.equals("owner")) {
+    if (attribute.equals(ATT_OWNER)) {
       checkNotCreate(view, attribute, create);
       UserPrincipal user = checkType(view, attribute, value, UserPrincipal.class);
       // TODO(cgdecker): Do we really need to do this? Any reason not to allow any UserPrincipal?
       if (!(user instanceof UserLookupService.JimfsUserPrincipal)) {
         user = createUserPrincipal(user.getName());
       }
-      file.setAttribute("owner", "owner", user);
+      file.setAttribute(ATT_OWNER, ATT_OWNER, user);
     }
   }
 
@@ -107,17 +109,17 @@ final class OwnerAttributeProvider extends AttributeProvider {
 
     @Override
     public String name() {
-      return "owner";
+      return ATT_OWNER;
     }
 
     @Override
     public UserPrincipal getOwner() throws IOException {
-      return (UserPrincipal) lookupFile().getAttribute("owner", "owner");
+      return (UserPrincipal) lookupFile().getAttribute(ATT_OWNER, ATT_OWNER);
     }
 
     @Override
     public void setOwner(UserPrincipal owner) throws IOException {
-      lookupFile().setAttribute("owner", "owner", checkNotNull(owner));
+      lookupFile().setAttribute(ATT_OWNER, ATT_OWNER, checkNotNull(owner));
     }
   }
 }
