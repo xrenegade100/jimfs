@@ -71,11 +71,13 @@ final class JimfsFileChannel extends FileChannel {
   private final boolean write;
   private final boolean append;
 
+  public static final String POSITION_KEY_NAME = "position";
+
   @GuardedBy("this")
   private long position;
 
   public JimfsFileChannel(
-      RegularFile file, Set<OpenOption> options, FileSystemState fileSystemState) {
+          RegularFile file, Set<OpenOption> options, FileSystemState fileSystemState) {
     this.file = file;
     this.fileSystemState = fileSystemState;
     this.read = options.contains(READ);
@@ -214,7 +216,7 @@ final class JimfsFileChannel extends FileChannel {
   @Override
   public int read(ByteBuffer dst, long position) throws IOException {
     checkNotNull(dst);
-    Util.checkNotNegative(position, "position");
+    Util.checkNotNegative(position, POSITION_KEY_NAME);
     checkOpen();
     checkReadable();
 
@@ -320,7 +322,7 @@ final class JimfsFileChannel extends FileChannel {
   @Override
   public int write(ByteBuffer src, long position) throws IOException {
     checkNotNull(src);
-    Util.checkNotNegative(position, "position");
+    Util.checkNotNegative(position, POSITION_KEY_NAME);
     checkOpen();
     checkWritable();
 
@@ -501,7 +503,7 @@ final class JimfsFileChannel extends FileChannel {
   @Override
   public long transferTo(long position, long count, WritableByteChannel target) throws IOException {
     checkNotNull(target);
-    Util.checkNotNegative(position, "position");
+    Util.checkNotNegative(position, POSITION_KEY_NAME);
     Util.checkNotNegative(count, "count");
     checkOpen();
     checkReadable();
@@ -534,7 +536,7 @@ final class JimfsFileChannel extends FileChannel {
   @Override
   public long transferFrom(ReadableByteChannel src, long position, long count) throws IOException {
     checkNotNull(src);
-    Util.checkNotNegative(position, "position");
+    Util.checkNotNegative(position, POSITION_KEY_NAME);
     Util.checkNotNegative(count, "count");
     checkOpen();
     checkWritable();
@@ -626,7 +628,7 @@ final class JimfsFileChannel extends FileChannel {
   }
 
   private void checkLockArguments(long position, long size, boolean shared) throws IOException {
-    Util.checkNotNegative(position, "position");
+    Util.checkNotNegative(position, POSITION_KEY_NAME);
     Util.checkNotNegative(size, "size");
     checkOpen();
     if (shared) {

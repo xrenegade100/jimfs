@@ -65,7 +65,7 @@ abstract class AbstractWatchService implements WatchService {
    * it to do other things as well.
    */
   public Key register(Watchable watchable, Iterable<? extends WatchEvent.Kind<?>> eventTypes)
-      throws IOException {
+          throws IOException {
     checkOpen();
     return new Key(this, watchable, eventTypes);
   }
@@ -173,8 +173,8 @@ abstract class AbstractWatchService implements WatchService {
       if (obj instanceof Event) {
         Event<?> other = (Event<?>) obj;
         return kind().equals(other.kind())
-            && count() == other.count()
-            && Objects.equals(context(), other.context());
+                && count() == other.count()
+                && Objects.equals(context(), other.context());
       }
       return false;
     }
@@ -187,10 +187,10 @@ abstract class AbstractWatchService implements WatchService {
     @Override
     public String toString() {
       return MoreObjects.toStringHelper(this)
-          .add("kind", kind())
-          .add("count", count())
-          .add("context", context())
-          .toString();
+              .add("kind", kind())
+              .add("count", count())
+              .add("context", context())
+              .toString();
     }
   }
 
@@ -214,9 +214,9 @@ abstract class AbstractWatchService implements WatchService {
     private final BlockingQueue<WatchEvent<?>> events = new ArrayBlockingQueue<>(MAX_QUEUE_SIZE);
 
     public Key(
-        AbstractWatchService watcher,
-        @NullableDecl Watchable watchable,
-        Iterable<? extends WatchEvent.Kind<?>> subscribedTypes) {
+            AbstractWatchService watcher,
+            @NullableDecl Watchable watchable,
+            Iterable<? extends WatchEvent.Kind<?>> subscribedTypes) {
       this.watcher = checkNotNull(watcher);
       this.watchable = watchable; // nullable for Watcher poison
       this.subscribedTypes = ImmutableSet.copyOf(subscribedTypes);
@@ -277,11 +277,8 @@ abstract class AbstractWatchService implements WatchService {
     public boolean reset() {
       // calling reset() multiple times without polling events would cause key to be placed in
       // watcher queue multiple times, but not much that can be done about that
-      if (isValid() && state.compareAndSet(State.SIGNALLED, State.READY)) {
-        // requeue if events are pending
-        if (!events.isEmpty()) {
-          signal();
-        }
+      if (isValid() && state.compareAndSet(State.SIGNALLED, State.READY) && !events.isEmpty()) {
+        signal();
       }
 
       return isValid();
