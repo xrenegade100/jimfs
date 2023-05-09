@@ -145,6 +145,19 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.12.0</version>
+        <configuration>
+          <targetClasses>
+            <param>com.google.common.jimfs*</param>
+          </targetClasses>
+          <targetTests>
+            <param>com.google.common.jimfs*</param>
+          </targetTests>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
