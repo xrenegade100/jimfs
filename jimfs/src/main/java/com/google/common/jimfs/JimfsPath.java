@@ -322,7 +322,8 @@ final class JimfsPath implements Path {
 
     ImmutableList<Name> otherNames = otherPath.names;
     int sharedSubsequenceLength = 0;
-    for (int i = 0; i < Math.min(getNameCount(), otherNames.size()); i++) {
+    int length = Math.min(getNameCount(), otherNames.size());
+    for (int i = 0; i < length; i++) {
       if (names.get(i).equals(otherNames.get(i))) {
         sharedSubsequenceLength++;
       } else {

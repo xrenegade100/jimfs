@@ -96,7 +96,7 @@ final class JimfsFileSystems {
     for (String root : config.roots) {
       JimfsPath path = pathService.parsePath(root);
       if (!path.isAbsolute() && path.getNameCount() == 0) {
-        throw new IllegalArgumentException("Invalid root path: " + root);
+        throw new IllegalArgumentException("Invalid root path: ".concat(root));
       }
 
       Name rootName = path.root();

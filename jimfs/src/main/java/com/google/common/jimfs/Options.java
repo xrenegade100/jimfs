@@ -100,7 +100,7 @@ final class Options {
         if (option == LinkOption.NOFOLLOW_LINKS) {
           nofollowLinks = true;
         } else {
-          throw new UnsupportedOperationException("'" + option + "' not allowed");
+          throw new UnsupportedOperationException("'".concat(option.toString()).concat("' not allowed"));
         }
       }
     }

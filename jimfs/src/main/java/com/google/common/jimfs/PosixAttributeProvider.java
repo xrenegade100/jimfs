@@ -162,8 +162,8 @@ final class PosixAttributeProvider extends AttributeProvider {
       if (!(obj instanceof PosixFilePermission)) {
         throw new IllegalArgumentException(
             "invalid element for attribute 'posix:permissions': "
-                + "should be Set<PosixFilePermission>, found element of type "
-                + obj.getClass());
+                    .concat("should be Set<PosixFilePermission>, found element of type ")
+                    .concat(obj.getClass().toString()));
       }
     }
 

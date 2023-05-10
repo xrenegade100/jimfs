@@ -98,7 +98,7 @@ public abstract class PathType {
     }
 
     // TODO(cgdecker): When CharMatcher is out of @Beta, us Splitter.on(CharMatcher)
-    StringBuilder patternBuilder = new StringBuilder();
+    StringBuilder patternBuilder = new StringBuilder(16);
     patternBuilder.append("[");
     appendToRegex(separator, patternBuilder);
     for (char other : otherSeparators) {

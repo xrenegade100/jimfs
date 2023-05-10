@@ -154,7 +154,8 @@ final class AttributeService {
   /** Sets all initial attributes for the given file, including the given attributes if possible. */
   public void setInitialAttributes(File file, FileAttribute<?>... attrs) {
     // default values should already be sanitized by their providers
-    for (int i = 0; i < defaultValues.size(); i++) {
+    int defaultValuesSize = defaultValues.size();
+    for (int i = 0; i < defaultValuesSize; i++) {
       FileAttribute<?> attribute = defaultValues.get(i);
 
       int separatorIndex = attribute.name().indexOf(':');

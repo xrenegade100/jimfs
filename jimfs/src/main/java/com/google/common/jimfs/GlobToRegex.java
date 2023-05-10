@@ -56,7 +56,7 @@ final class GlobToRegex {
   private final String separators;
   private final InternalCharMatcher separatorMatcher;
 
-  private final StringBuilder builder = new StringBuilder();
+  private final StringBuilder builder = new StringBuilder(16);
   private final Deque<State> states = new ArrayDeque<>();
   private int index;
 
@@ -75,7 +75,8 @@ final class GlobToRegex {
    */
   private String convert() {
     pushState(NORMAL);
-    for (index = 0; index < glob.length(); index++) {
+    int globLength = glob.length();
+    for (index = 0; index < globLength; index++) {
       currentState().process(this, glob.charAt(index));
     }
     currentState().finish(this);
@@ -130,7 +131,8 @@ final class GlobToRegex {
       appendNormal(separators.charAt(0));
     } else {
       builder.append('[');
-      for (int i = 0; i < separators.length(); i++) {
+      int separatorsLength = separators.length();
+      for (int i = 0; i < separatorsLength; i++) {
         appendInBracket(separators.charAt(i));
       }
       builder.append("]");
@@ -140,7 +142,8 @@ final class GlobToRegex {
   /** Appends the regex form that matches anything except the separators for the path type. */
   private void appendNonSeparator() {
     builder.append("[^");
-    for (int i = 0; i < separators.length(); i++) {
+    int separatorsLength = separators.length();
+    for (int i = 0; i < separatorsLength; i++) {
       appendInBracket(separators.charAt(i));
     }
     builder.append(']');

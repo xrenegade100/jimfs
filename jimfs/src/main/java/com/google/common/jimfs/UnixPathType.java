@@ -56,7 +56,7 @@ final class UnixPathType extends PathType {
 
   @Override
   public String toString(@NullableDecl String root, Iterable<String> names) {
-    StringBuilder builder = new StringBuilder();
+    StringBuilder builder = new StringBuilder(16);
     if (root != null) {
       builder.append(root);
     }
@@ -66,7 +66,7 @@ final class UnixPathType extends PathType {
 
   @Override
   public String toUriPath(String root, Iterable<String> names, boolean directory) {
-    StringBuilder builder = new StringBuilder();
+    StringBuilder builder = new StringBuilder(16);
     for (String name : names) {
       builder.append('/').append(name);
     }

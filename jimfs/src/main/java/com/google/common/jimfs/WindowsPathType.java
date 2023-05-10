@@ -81,10 +81,11 @@ final class WindowsPathType extends PathType {
 
     // check for root.length() > 3 because only "C:\" type roots are allowed to have :
     int startIndex = root == null || root.length() > 3 ? 0 : root.length();
-    for (int i = startIndex; i < path.length(); i++) {
+    int pathLength = path.length();
+    for (int i = startIndex; i < pathLength; i++) {
       char c = path.charAt(i);
       if (isReserved(c)) {
-        throw new InvalidPathException(original, "Illegal char <" + c + ">", i);
+        throw new InvalidPathException(original, "Illegal char <".concat(String.valueOf(c)).concat(">"), i);
       }
     }
 
@@ -161,7 +162,7 @@ final class WindowsPathType extends PathType {
 
   @Override
   public String toString(@NullableDecl String root, Iterable<String> names) {
-    StringBuilder builder = new StringBuilder();
+    StringBuilder builder = new StringBuilder(16);
     if (root != null) {
       builder.append(root);
     }
@@ -177,7 +178,7 @@ final class WindowsPathType extends PathType {
       root = "/" + root.replace('\\', '/');
     }
 
-    StringBuilder builder = new StringBuilder();
+    StringBuilder builder = new StringBuilder(16);
     builder.append(root);
 
     Iterator<String> iter = names.iterator();

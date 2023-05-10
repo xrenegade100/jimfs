@@ -79,7 +79,7 @@ final class PathURLConnection extends URLConnection {
     if (Files.isDirectory(path)) {
       // Match File URL behavior for directories by having the stream contain the filenames in
       // the directory separated by newlines.
-      StringBuilder builder = new StringBuilder();
+      StringBuilder builder = new StringBuilder(16);
       try (DirectoryStream<Path> files = Files.newDirectoryStream(path)) {
         for (Path file : files) {
           builder.append(file.getFileName()).append('\n');
