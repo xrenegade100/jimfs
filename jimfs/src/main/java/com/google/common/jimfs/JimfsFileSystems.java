@@ -56,8 +56,7 @@ final class JimfsFileSystems {
           Jimfs.systemProvider.getClass().getDeclaredMethod("removeFileSystemRunnable", URI.class);
       return (Runnable) method.invoke(null, uri);
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-      throw new RuntimeException(
-          "Unable to get Runnable for removing the FileSystem from the cache when it is closed", e);
+      throw new FSCacheRemoveException(e);
     }
   }
 
