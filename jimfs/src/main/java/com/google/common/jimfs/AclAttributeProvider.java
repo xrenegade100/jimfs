@@ -96,8 +96,8 @@ final class AclAttributeProvider extends AttributeProvider {
       if (!(obj instanceof AclEntry)) {
         throw new IllegalArgumentException(
             "invalid element for attribute 'acl:acl': should be List<AclEntry>, "
-                + "found element of type "
-                + obj.getClass());
+                    .concat("found element of type ")
+                    .concat(obj.getClass().toString()));
       }
     }
 

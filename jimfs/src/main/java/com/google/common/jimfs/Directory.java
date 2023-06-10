@@ -226,7 +226,7 @@ final class Directory extends File implements Iterable<DirectoryEntry> {
           entry.file().incrementLinkCount();
           return;
         } else {
-          throw new IllegalArgumentException("entry '" + entry.name() + "' already exists");
+          throw new IllegalArgumentException("entry '".concat(entry.name().toString()).concat("' already exists"));
         }
       }
 
